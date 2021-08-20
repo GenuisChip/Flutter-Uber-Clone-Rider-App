@@ -24,6 +24,58 @@ class _MainScereenState extends State<MainScereen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Main Screen")),
+      drawer: Container(
+        color: Colors.white,
+        width: 255,
+        child: Drawer(
+          child: ListView(
+            children: [
+              Container(
+                height: 165,
+                child: DrawerHeader(
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        "assets/images/user_icon.png",
+                        height: 65,
+                        width: 65,
+                      ),
+                      SizedBox(width: 16),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Profile Name",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontFamily: "Brand-Bold",
+                            ),
+                          ),
+                          SizedBox(height: 6),
+                          Text("Visit Profile")
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              ListTile(
+                leading: Icon(Icons.history),
+                title: Text("History", style: TextStyle(fontSize: 15)),
+              ),
+              ListTile(
+                leading: Icon(Icons.person),
+                title: Text("Visit Profile", style: TextStyle(fontSize: 15)),
+              ),
+              ListTile(
+                leading: Icon(Icons.info),
+                title: Text("About", style: TextStyle(fontSize: 15)),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Stack(
         children: [
           GoogleMap(
