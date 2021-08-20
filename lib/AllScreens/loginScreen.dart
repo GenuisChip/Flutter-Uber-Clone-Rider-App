@@ -1,10 +1,20 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rider_app/AllScreens/mainScreen.dart';
+import 'package:rider_app/AllScreens/registrationScreen.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key key}) : super(key: key);
+  LoginScreen({Key key}) : super(key: key);
+  static const String screenId = "loginScreen";
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  BuildContext context;
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -33,6 +43,7 @@ class LoginScreen extends StatelessWidget {
                 children: [
                   SizedBox(height: 1),
                   TextField(
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       labelText: "Email",
@@ -46,6 +57,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 1),
                   TextField(
+                    controller: passwordController,
                     keyboardType: TextInputType.emailAddress,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -60,7 +72,7 @@ class LoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 1),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: login,
                     color: Colors.orange,
                     textColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -78,7 +90,13 @@ class LoginScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        RegistrationScreen.screenId,
+                        (route) => false,
+                      );
+                    },
                     child: Text(
                       "Don't have an Account? Signup Here",
                       textAlign: TextAlign.center,
@@ -91,6 +109,37 @@ class LoginScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  login() async {
+    firebaseAuth
+        .signInWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    )
+        .then((user) {
+      if (user != null) {
+        Navigator.pushNamedAndRemoveUntil(
+            context, MainScereen.screenId, (route) => false);
+        toastMsg("You're logged in");
+      } else {
+        toastMsg("Email or Password in incorrect");
+      }
+    }).catchError((onError) {
+      toastMsg(onError.toString());
+    });
+  }
+
+  toastMsg(String msg) {
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.greenAccent[200],
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }

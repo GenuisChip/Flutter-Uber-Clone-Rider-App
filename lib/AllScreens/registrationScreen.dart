@@ -1,10 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rider_app/AllScreens/loginScreen.dart';
+import 'package:rider_app/AllScreens/mainScreen.dart';
 
 class RegistrationScreen extends StatelessWidget {
-  const RegistrationScreen({Key key}) : super(key: key);
+  static const String screenId = "registrationScreen";
+
+  RegistrationScreen({Key key}) : super(key: key);
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  BuildContext context;
 
   @override
   Widget build(BuildContext context) {
+    this.context = context;
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -33,6 +48,7 @@ class RegistrationScreen extends StatelessWidget {
                 children: [
                   SizedBox(height: 1),
                   TextField(
+                    controller: nameController,
                     keyboardType: TextInputType.text,
                     decoration: InputDecoration(
                       labelText: "Name",
@@ -46,6 +62,7 @@ class RegistrationScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 1),
                   TextField(
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
                       labelText: "Email",
@@ -59,6 +76,7 @@ class RegistrationScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 1),
                   TextField(
+                    controller: phoneController,
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       labelText: "Phone",
@@ -72,6 +90,7 @@ class RegistrationScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 1),
                   TextField(
+                    controller: passwordController,
                     keyboardType: TextInputType.visiblePassword,
                     obscureText: true,
                     decoration: InputDecoration(
@@ -86,7 +105,7 @@ class RegistrationScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 1),
                   RaisedButton(
-                    onPressed: () {},
+                    onPressed: signup,
                     color: Colors.orange,
                     textColor: Colors.white,
                     shape: RoundedRectangleBorder(
@@ -102,12 +121,70 @@ class RegistrationScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                  SizedBox(height: 5),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        LoginScreen.screenId,
+                        (route) => false,
+                      );
+                    },
+                    child: Text(
+                      "Already have an Account? Login Here",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14, fontFamily: "Brand Bold"),
+                    ),
+                  )
                 ],
               ),
             )
           ],
         ),
       ),
+    );
+  }
+
+  bool checkValidation() {
+    return false;
+  }
+
+  signup() async {
+    // if (!checkValidation()) return;
+    firebaseAuth
+        .createUserWithEmailAndPassword(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    )
+        .then((user) {
+      if (user != null) {
+        DatabaseReference userRef =
+            FirebaseDatabase.instance.reference().child("users");
+
+        Map userData = {
+          "name": nameController.text.trim(),
+          'phone': phoneController.text.trim(),
+          "email": emailController.text.trim()
+        };
+        userRef.child(user.user.uid).set(userData);
+        toastMsg("Your Account has Created");
+        Navigator.pushNamedAndRemoveUntil(
+            context, MainScereen.screenId, (route) => false);
+      }
+    }).catchError((onError) {
+      toastMsg(onError.toString());
+    });
+  }
+
+  toastMsg(String msg) {
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.greenAccent[200],
+      textColor: Colors.white,
+      fontSize: 16.0,
     );
   }
 }
