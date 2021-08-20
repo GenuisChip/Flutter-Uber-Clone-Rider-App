@@ -33,6 +33,113 @@ class _MainScereenState extends State<MainScereen> {
             onMapCreated: (GoogleMapController controller) {
               _controller.complete(controller);
             },
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              padding: EdgeInsets.all(12),
+              height: 320,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(18),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black38,
+                      blurRadius: 16,
+                      spreadRadius: 0.5,
+                      offset: Offset(.7, .7),
+                    )
+                  ]),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 6),
+                  Text("Hi there, ", style: TextStyle(fontSize: 12)),
+                  Text(
+                    "Where to?,  ",
+                    style: TextStyle(fontSize: 20, fontFamily: "Brand-Bold"),
+                  ),
+                  SizedBox(height: 20),
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 6,
+                          spreadRadius: 0.5,
+                          offset: Offset(.7, .7),
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.search,
+                          color: Colors.orange,
+                        ),
+                        SizedBox(width: 10),
+                        Text("Search Drop Off"),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.home,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Add Home"),
+                          SizedBox(height: 4),
+                          Text(
+                            "Your living home address",
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 12,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                  Divider(height: 20),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.work,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(width: 12),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Add Work"),
+                          SizedBox(height: 4),
+                          Text(
+                            "Your office address",
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 12,
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
           )
         ],
       ),
